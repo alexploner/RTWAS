@@ -1,0 +1,19 @@
+Package: RTWAS
+Title: Methods for transcriptome-wide association analysis studies based on FUSION
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Alexander", "Ploner", , "alexander.ploner@ki.se", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-5042-8326")),
+    person("Sasha", "Gusev", , "alexander_gusev@dfci.harvard.edu", role = c("aut"),
+           comment = c(ORCID = "0000-0002-7980-4620")),
+    person("", "Phuwanat", , "s.phuwanat@gmail.com", role = "ctb") )
+Description: This package is a re-write of methods forked from the FUSION suite
+    of tools for transcriptome-wide association analyses combining genetic and 
+    gene expression data <https://github.com/gusevlab/fusion_twas>. Focus is on 
+    implementation as a proper R package, rather than the FUSION script style, 
+    allowing for easier usage, modification and documentation, while maintaining 
+    compatability as much as possibble.
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
