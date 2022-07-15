@@ -2,5 +2,6 @@
 
 export(allele.qc)
 export(opts_rtwas)
+export(predict_expression)
 export(read_genelist)
 export(read_refdata)
