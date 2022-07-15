@@ -22,3 +22,5 @@ Imports:
     plink2R
 Suggests: 
     RColorBrewer
+Depends: 
+    Rcpp
