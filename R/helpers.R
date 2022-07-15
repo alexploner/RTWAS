@@ -122,8 +122,8 @@ read_refdata <- function(file, chr, scale = TRUE, opts = opts_rtwas$get())
   ## Read the specified file(s)
   refdat <- plink2R::read_plink(file, impute="avg")
   ## Column names for bim are useful
-  ## FIXME: V3 = ?
-  colnames(refdat$bim) <- c("CHR", "SNPID", "V3", "BP", "A1", "A2")
+  colnames(refdat$bim) <- c("CHR", "SNPID", "POS", "BP", "A1", "A2")
+  ## FIXME: colnames fam as per https://www.cog-genomics.org/plink2/formats#fam
 
   if (scale) refdat$bed <- scale(refdat$bed)
 
@@ -140,3 +140,26 @@ load2list <- function(file)
   load(file,  temp_env <- new.env())
   as.list(temp_env)
 }
+
+## Calculate the correlation matrix for the predicted gene expression
+## values from the matrix of predicted gene expressions, as
+## returned by predict_expression
+##
+## Trivial, but wrapped to include shrinking low correlations to zero,
+## and checking for positive definiteness of the shrunk matrix
+calcCorr_predGE <- function(predge, opts = opts_rtwas$get())
+{
+  ## Calculate
+  corr <- cor(pred_ge)
+
+  ## Shrink small correlations
+  ndx <- corr*corr < opts$min_r2
+  if (any(ndx)) cat(length(which(ndx)), "/", nrow(corr)^2,
+                     " correlations between gene expression shrunk\n", sep="")
+  corr[ndx] <- 0
+  ## Check pos-def
+  if (prod(svd(corr)$d) <= 0) cat("Shrunk matrix is not pos-semidefinite\n")
+
+  corr
+}
+
