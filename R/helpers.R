@@ -91,6 +91,44 @@ read_genelist <- function(file, chr, minp, opts = opts_rtwas$get())
   genes
 }
 
+#' Read genetic reference data
+#'
+#' Read the genetic reference data for establishing LD estimates etc.
+#'
+#' @param file Stub of the file names containing the reference data, see Details.
+#' @param chr Number of chromosome to read in
+#' @param scale Logical flag indicating whether to scale the allele counts
+#'              (default `TRUE`)
+#' @param opts List of options used for extracting default values for unspecified
+#'             arguments
+#'
+#' @details The reference data is assumed to be in PLINK format (.bed/.bim/.fam),
+#' with file names as `<stub>.<chr number>.<ext>`. The standard data used by
+#' FUSION is the European subset of the 1000 Genomes data.
+#'
+#' @returns FIXME
+#'
+#' @export
+read_refdata <- function(file, chr, scale = TRUE, opts = opts_rtwas$get())
+{
+  ## Use options to fill in missing values
+  if (missing(file)) file <- opts[["ref_ld_chr"]]
+  stopifnot( !is.na(file) )
+  if (missing(chr))  chr  <- opts[["chr"]]
+  stopifnot( !is.na(chr) )
+  ## Combine for chr-specific stub
+  file <- paste0(file, chr)
+
+  ## Read the specified file(s)
+  refdat <- plink2R::read_plink(file, impute="avg")
+  ## Column names for bim are useful
+  ## FIXME: V3 = ?
+  colnames(refdat$bim) <- c("CHR", "SNPID", "V3", "BP", "A1", "A2")
+
+  if (scale) refdat$bed <- scale(refdat$bed)
+
+  refdat
+}
 
 
 
