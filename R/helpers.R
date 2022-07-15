@@ -130,5 +130,13 @@ read_refdata <- function(file, chr, scale = TRUE, opts = opts_rtwas$get())
   refdat
 }
 
-
-
+## Load the content of a .RData file to a list, as per
+## https://stackoverflow.com/questions/61384955/load-rdata-file-into-list
+##
+## Somewhat memory intense (especially nested in a function call), but the
+## size of the data loaded here (pre-calculated weights) is trivial
+load2list <- function(file)
+{
+  load(file,  temp_env <- new.env())
+  as.list(temp_env)
+}
