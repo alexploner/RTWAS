@@ -163,3 +163,75 @@ calcCorr_predGE <- function(predge, opts = opts_rtwas$get())
   corr
 }
 
+#' Identify contiguous loci around EQTL-SNPs in the genetic reference data
+#'
+#' For the conditional TWAS analysis, both the SNPs and the conditioning
+#' (gene-level) TWAS-statistics are clumped into contiguous loci.
+#'
+#' @param refdata Genetic reference data, as a list with PLINK-style components;
+#'                typically output from `read_refdata`
+#' @param snp_ndx logical vector indicating for each SNP in the reference data
+#'                whether it carries an EQTL weight (and is therefore included
+#'                in the locus-construction); typically output from `eqtl_to_refdat`.
+#' @param opts List of options used for extracting default values for unspecified
+#'             arguments
+#'
+#' @return A data frame with columns `starts` and `ends` indicating the start and
+#'         end base pair position of each locus
+#'
+#' @seealso [read_refdata()], [eqtl_to_refdat()]
+#' @export
+find_loci <- function(refdata, snp_ndx, opts = opts_rtwas$get())
+{
+  ## Quick check: can this be the correct index?
+  stopifnot(nrow(refdata$bim) == length(snp_ndx))
+
+  ## Identify consecutive sequences of EQTL SNPs
+  runs     <- rle(snp_ndx)
+  runs_end <- cumsum(runs$lengths)
+  if ( runs$val[1] ) { ## Starting on an eqtl SNP (TRUE)
+    loc.starts <- c(1, runs_end[!runs$val] + 1)
+  } else { ## Starting with non-eqtl SNP (FALSE)
+    loc.starts <- runs_end[ !runs$val ] + 1
+  }
+  loc.ends   <- runs_end[runs$val]
+  loc.starts <- loc.starts[ 1:length(loc.ends) ]
+
+  ## Translate the SNP-index into the actual BP address of the start / end, and
+  ## extend by the specified number of BP in both directions
+  loc.starts <- refdata$bim[loc.starts, "BP"] - opts$locus_win
+  loc.ends   <- refdata$bim[loc.ends, "BP"]   + opts$locus_win
+  if( opts$verbose > 0 ) {
+    cat( length(loc.starts) , " strictly non-overlapping loci\n" , sep='' , file=stderr() )
+  }
+
+  ## Now with the extended BP window, some of the loci may actually overlap, so
+  ## these are combined here
+  cons.loc.starts <- loc.starts[1]
+  cons.loc.ends   <- loc.ends[1]
+  loc.ctr <- 1
+
+  ## Only if we have more than one locus, actually
+  if ( length(loc.starts) > 1 ) {
+
+    for ( i in 2:length(loc.starts) ) {
+      if ( loc.starts[i] < cons.loc.ends[ loc.ctr ] ) {
+        cons.loc.ends[ loc.ctr ] <- max( cons.loc.ends[ loc.ctr ], loc.ends[i] )
+      } else {
+        ## Not super-efficient extending the vector, but ok
+        cons.loc.starts <- c(cons.loc.starts, loc.starts[i])
+        cons.loc.ends   <- c(cons.loc.ends, loc.ends[i])
+        loc.ctr <- loc.ctr + 1
+      }
+    }
+
+  }
+
+  if( opts$verbose > 0 ) {
+    cat( "consolidated to ", length(cons.loc.starts) , " non-overlapping loci with ",
+         opts$locus_win , " bp buffer\n" , sep='' , file=stderr() )
+  }
+
+  data.frame(starts = cons.loc.starts, ends = cons.loc.ends)
+}
+
