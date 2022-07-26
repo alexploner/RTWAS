@@ -235,3 +235,26 @@ find_loci <- function(refdata, snp_ndx, opts = opts_rtwas$get())
   data.frame(starts = cons.loc.starts, ends = cons.loc.ends)
 }
 
+## Set default treshold for TWAS relevance
+##
+## Following FUSION, this is somewhat complicated (and error-prone): if it
+## evaluates logically to TRUE, use the specified value evaluated as numerical
+## expression; if it evaluates as FALSE, the value is set to 0.05/#genes (i.e.
+## a Bonferroni-adjusted threshold of 0.05)
+set_zthresh <- function(ngenes, opts = opts_rtwas$get())
+{
+  if( opts$zthresh ) {
+    zthresh <- as.numerical( opts$zthresh )
+  } else {
+    zthresh <- qnorm( 0.025/ ngenes , lower.tail=FALSE)
+  }
+
+  if( opts$verbose > 1 ) {
+    cat( ngenes , " weights considered, only weights with Z^2 > ", zthresh^2 ,
+         " are retained in the model\n" , sep='' , file=stderr() )
+  }
+
+  zthresh
+}
+
+
