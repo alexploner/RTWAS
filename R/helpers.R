@@ -147,7 +147,7 @@ load2list <- function(file)
 ##
 ## Trivial, but wrapped to include shrinking low correlations to zero,
 ## and checking for positive definiteness of the shrunk matrix
-calcCorr_predGE <- function(predge, opts = opts_rtwas$get())
+calcCorr_predGE <- function(pred_ge, opts = opts_rtwas$get())
 {
   ## Calculate
   corr <- cor(pred_ge)
