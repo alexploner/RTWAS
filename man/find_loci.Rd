@@ -13,6 +13,9 @@ typically output from \code{read_refdata}}
 \item{snp_ndx}{logical vector indicating for each SNP in the reference data
 whether it carries an EQTL weight (and is therefore included
 in the locus-construction); typically output from \code{eqtl_to_refdat}.}
+
+\item{opts}{List of options used for extracting default values for unspecified
+arguments}
 }
 \value{
 A data frame with columns \code{starts} and \code{ends} indicating the start and
