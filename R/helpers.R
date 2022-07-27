@@ -257,4 +257,42 @@ set_zthresh <- function(ngenes, opts = opts_rtwas$get())
   zthresh
 }
 
+#' Read GWAS summary statistics
+#'
+#' Read the summary statistics for the phenotype of interest
+#'
+#' @param refdata Genetic reference data, as a list with PLINK-style components;
+#'                typically output from `read_refdata`
+#' @param opts List of options used for extracting default values for unspecified
+#'             arguments
+#'
+#' @details data format FIXME
+#'
+#' @returns FIXME
+#'
+#' @export
+read_sumstats <- function(refdata, opts = opts_rtwas$get())
+{
 
+  sumstat <- read.table(opts$sumstats, head=TRUE, as.is=TRUE)
+
+  ## Cut down the summary stats to what is currently being analyzed
+  ## - keeping the non-matched SNPs by filling in name & alleles, with NA for
+  ##   actual summary stats
+  m <- match( refdata$bim[,2] , sumstat$SNP )
+  sum.missing <- is.na(m)
+  sumstat <- sumstat[m,]
+  sumstat$SNP = refdata$bim[,2]
+  sumstat$A1[ sum.missing ] = refdata$bim[sum.missing,5]
+  sumstat$A2[ sum.missing ] = refdata$bim[sum.missing,6]
+
+  # QC / allele-flip the input and output
+  qc <- allele.qc( sumstat$A1 , sumstat$A2 , refdata$bim[,5] , refdata$bim[,6] )
+
+  # Flip Z-scores for mismatching alleles
+  sumstat$Z[ qc$flip ]  <- -1 * sumstat$Z[ qc$flip ]
+  sumstat$A1[ qc$flip ] <- refdata$bim[qc$flip,5]
+  sumstat$A2[ qc$flip ] <- refdata$bim[qc$flip,6]
+
+  sumstat
+}
