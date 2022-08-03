@@ -106,6 +106,13 @@ condTWAS_snp <- function(summarystats, genelist, refdata, pred_ge, pred_ge_corr,
   ## Return object
   ret <- vector("list", length = nloci)
 
+  ## Prepare header for output file, if required
+  if ( opts$report ) {
+    file.report <- paste0(opts$out, ".report")
+    cat( "FILE", "CHR", "P0", "P1", "HIT.GENES", "JOINT.GENES", "BEST.TWAS.P",
+         "BEST.SNP.P", "COND.SNP.P", "VAR.EXP\n", sep='\t' , file=file.report )
+  }
+
   ## Loop over all loci
   for (i in 1:nloci) {
 
@@ -117,13 +124,6 @@ condTWAS_snp <- function(summarystats, genelist, refdata, pred_ge, pred_ge_corr,
     cond_z <- genelist$TWAS.Z   ## Comb. adjusted test stat / processing flag
     cond_z[ !ge_keep ] <- 0     ## ... 0 for genes not part of selection / conditioning
     joint_keep <- rep(FALSE, ngenes) ## Indicator for final set of conditioning genes
-
-    ## Prepare header for output file, if required
-    if ( opts$report ) {
-      file.report <- paste0(opts$out, ".report")
-      cat( "FILE", "CHR", "P0", "P1", "HIT.GENES", "JOINT.GENES", "BEST.TWAS.P",
-           "BEST.SNP.P", "COND.SNP.P", "VAR.EXP\n", sep='\t' , file=file.report )
-    }
 
     ## SKIP the locus if none of the original TWAS statistics is above the
     ## specified threshold
