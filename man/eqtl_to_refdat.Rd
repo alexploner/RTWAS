@@ -15,13 +15,15 @@ weights; typically output from \code{read_genelist}}
 typically output from \code{read_refdata}}
 }
 \value{
-A list with two components:\preformatted{* `refsnps_keep`: a logical vector that indicates for each SNP in the
+A list with two components:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{* `refsnps_keep`: a logical vector that indicates for each SNP in the
                   reference data whether it has a weight associated in
                   the EQTL data.
 * `pred_expression`: a numerical matrix with the predicted gene expression
                      component for each gene (as columns) for all subjects
                      in the reference data (as rows).
-}
+}\if{html}{\out{</div>}}
 }
 \description{
 Given a list of genes and the weights for their EQTL-SNPs, this function maps
