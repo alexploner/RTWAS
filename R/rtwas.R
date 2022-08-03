@@ -93,6 +93,8 @@ eqtl_to_refdat <- function(genelist, refdata)
 #' @param lambda
 #' @param opts List of options used for extracting default values for unspecified
 #'             arguments
+#'
+#' @export
 condTWAS_snp <- function(summarystats, genelist, refdata, pred_ge, pred_ge_corr,
                          cons_loci, lambda = 0, opts = opts_rtwas$get())
 {
