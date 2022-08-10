@@ -297,3 +297,18 @@ read_sumstats <- function(refdata, opts = opts_rtwas$get())
 
   sumstat
 }
+
+#' Hg19 gene list for annotation
+#'
+#' A dataset containing the Hg19 build of the humna genome for annotating
+#' GWAS/TWAS SNP-level results.
+#'
+#' @format A data frame with 26,292 rows and four variables:
+#' \describe{
+#'   \item{CHR}{chromosome where gene is located}
+#'   \item{P0}{first base position}
+#'   \item{P1}{last base position}
+#'   \item{ID}{name of gene}
+#' }
+#' @source Part of the original FUSION software \url{https://github.com/gusevlab/fusion_twas}
+"genelist"

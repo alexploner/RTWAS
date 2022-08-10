@@ -1,6 +1,6 @@
 Package: RTWAS
 Title: Methods for transcriptome-wide association analysis studies based on FUSION
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: c(
     person("Alexander", "Ploner", , "alexander.ploner@ki.se", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5042-8326")),
@@ -23,4 +23,6 @@ Imports:
 Suggests: 
     RColorBrewer
 Depends: 
+    R (>= 2.10),
     Rcpp
+LazyData: true
