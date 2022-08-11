@@ -333,7 +333,7 @@ condTWAS_snp <- function(summarystats, genelist, refdata, pred_ge, pred_ge_corr,
 #'
 #' @export
 #' @returns The same list of results as `condTWAS_snp`(the worker function).
-#' @seealso [condTWAS_snp()] [opts_rtwas()]
+#' @seealso [condTWAS_snp()] [opts_rtwas]
 postTWAS_conditional_chr <- function(chr, fn_genelist, fn_sumstats, fn_output,
                                      lambda = 0, opts = opts_rtwas$get())
 {
@@ -366,20 +366,20 @@ postTWAS_conditional_chr <- function(chr, fn_genelist, fn_sumstats, fn_output,
     opts[["out"]] <- fn_output
   }
 
-  #' Construct the matrix of predicted gene expressions, and the vector that indicates
-  #' which reference SNPs are part of the EQTL
-  #' Known as "ge_g.matrix" and "geno.keep" in FUSION
+  ## Construct the matrix of predicted gene expressions, and the vector that indicates
+  ## which reference SNPs are part of the EQTL
+  ## Known as "ge_g.matrix" and "geno.keep" in FUSION
   expr2ref <- eqtl_to_refdat(genelist, generef)
 
-  #' Correlation matrix of predicted gene expressions
-  #' Known as "ge_g.ld" in FUSION
+  ## Correlation matrix of predicted gene expressions
+  ## Known as "ge_g.ld" in FUSION
   pred_ge_corr <- calcCorr_predGE( expr2ref$pred_expression , opts = opts)
 
-  #' Calculate the contiguous loci
-  #' Known as "cons.loc.starts" and "cons.loc.end" in FUSION
+  ## Calculate the contiguous loci
+  ## Known as "cons.loc.starts" and "cons.loc.end" in FUSION
   cons.loc <- find_loci(generef, expr2ref$refsnps_keep, opts = opts)
 
-  #' Do the conditional analysis
+  ## Do the conditional analysis
   cond_snp <- condTWAS_snp(sumstat, genelist, generef, expr2ref$pred_expression,
                            pred_ge_corr, cons.loc, lambda = lambda, opts = opts)
   cond_snp$Call <- match.call()

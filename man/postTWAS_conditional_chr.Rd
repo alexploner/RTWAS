@@ -51,13 +51,5 @@ more of a fallback for situations where the either the gene list- or summary
 statistics files are not single-chromosome.
 }
 \seealso{
-\code{\link[=condTWAS_snp]{condTWAS_snp()}} \code{\link[=opts_rtwas]{opts_rtwas()}}
-Construct the matrix of predicted gene expressions, and the vector that indicates
-which reference SNPs are part of the EQTL
-Known as "ge_g.matrix" and "geno.keep" in FUSION
-Correlation matrix of predicted gene expressions
-Known as "ge_g.ld" in FUSION
-Calculate the contiguous loci
-Known as "cons.loc.starts" and "cons.loc.end" in FUSION
-Do the conditional analysis
+\code{\link[=condTWAS_snp]{condTWAS_snp()}} \link{opts_rtwas}
 }
