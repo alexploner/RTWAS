@@ -32,7 +32,7 @@
 opts_rtwas <- knitr:::new_defaults(list(
   ## Data
   sumstats   = NA, ## Summary statistics
-  input      = NA, ## List of pre-calculated expression weights
+  input      = NA, ## List of genes with TWAS statistics to analyze
   out        = NA, ## Stub name for output files
   ref_ld_chr = NA, ## Stub name for LD reference files
   chr        = NA, ## Chromosome for current analysis
