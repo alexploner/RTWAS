@@ -40,7 +40,7 @@ This is a wrapper function that combines all necessary function calls to
 perform a post-TWAS conditional analysis (at the SNP/locus level).
 }
 \details{
-If file names (options \verb{fn-}) arenot specified, the function falls
+If file names (options \code{fn_}) are not specified, the function falls
 back on the corresponding elements of the global option argument, namely
 \code{ìnput}, \code{sumstats} and \code{out} (see \code{opts_rtwas}); if these are also not set,
 the function will fail with an error.
