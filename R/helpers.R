@@ -312,3 +312,51 @@ read_sumstats <- function(refdata, opts = opts_rtwas$get())
 #' }
 #' @source Part of the original FUSION software \url{https://github.com/gusevlab/fusion_twas}
 "genelist"
+
+#' Expand file names
+#'
+#' Replace special string `!!!!` with the number of the chromosomes to be
+#' processed in file name templates
+#'
+#' @param template character vector with template or file names
+#' @param chr a numerical vector of chromosome numbers (range 1-22)
+#'
+#' @returns A character vector of file names, expanded if the input `template`
+#' contained the special `!!!!`, otherwise the original input
+#' @export
+#' @examples
+#' expand_special("sumstats_chr!!!!", 1:22)
+#' expand_special("sumstats_wholeGenome", 1:22)
+#' expand_special(c("sumstats_chr1", "sumstats_chr2"), 1:2)
+expand_special <- function(template, chr)
+{
+  ## Check & prepare the chromosome
+  nchr <- length(chr)
+  stopifnot( nchr > 0 )
+  if (is.numeric(chr)) {
+    chr <- round(chr)
+    stopifnot( (1<=chr) & (chr <=22) )
+  } else if (is.character(chr)) {
+    stopifnot( all(chr %in% as.character(1:22)))
+  }
+  stopifnot( !any(is.na(chr)) )
+
+  lt <- length(template)
+  stopifnot( lt > 0)
+  ## We only process templates of length one, anything else is passed through
+  ## if its length matches the number of chromosomes
+  if (lt > 1) {
+    stopifnot( lt == nchr)
+    fn <- template
+  } else {
+    ## If no special is specified in the template, we just replicate the
+    ## input
+    if ( grepl("!!!!", template, fixed = TRUE) ) {
+      fn <- sapply(chr, function(x) gsub("!!!!", x, template, fixed = TRUE))
+    } else {
+      fn <- rep(template, nchr)
+    }
+  }
+
+  fn
+}
