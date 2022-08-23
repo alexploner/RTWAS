@@ -439,5 +439,26 @@ postTWAS_conditional_chr <- function(chr, fn_genelist, fn_sumstats, fn_output,
 postTWAS_conditional_gw <- function(fn_genelist, fn_sumstats, fn_output,
                                     chr=1:22, lambda = 0, opts = opts_rtwas$get())
 {
+  chr <- unique(chr)
 
+  fn_genelist <- expand_special(fn_genelist, chr)
+  fn_sumstats <- expand_special(fn_sumstats, chr)
+  fn_output   <- expand_special(fn_output, chr)
+
+  ## FIXME: check these all agree as they should
+
+  nchr <- length(chr)
+  ret <- vector("list", length = nchr)
+  for (i in 1:nchr) {
+
+    ret[[i]] <- postTWAS_conditional_chr(chr = chr[i],
+                                         fn_genelist = fn_genelist[i],
+                                         fn_sumstats = fn_sumstats[i],
+                                         fn_output   = fn_output[i],
+                                         lambda = lambda, opts = opts)
+  }
+  names(ret) <- chr
+  ret$Call <- match.call()
+
+  ret
 }
